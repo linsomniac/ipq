@@ -7,6 +7,7 @@ from rich.console import Console, Group
 from rich.table import Table
 from rich.text import Text
 
+from ipq.lookups.myip import MyIPResult
 from ipq.models import QueryResult, SubnetResult
 
 console = Console()
@@ -179,6 +180,81 @@ def print_trace(result: QueryResult) -> None:
     else:
         console.print("[yellow]No traceroute data available[/]")
     _print_errors(result)
+
+
+def print_myip(myip: MyIPResult, public_info: QueryResult | None) -> None:
+    """Print myip output: local interfaces + public IP info."""
+    console.print()
+
+    # Local interfaces
+    if myip.local_interfaces:
+        table = Table(
+            show_header=True, box=None, padding=(0, 2), title="Local", title_style="bold cyan"
+        )
+        table.add_column("Interface", style="bold")
+        table.add_column("Address")
+
+        if myip.hostname:
+            table.add_row("hostname", myip.hostname)
+
+        for iface in myip.local_interfaces:
+            first = True
+            for addr in iface.ipv4 + iface.ipv6:
+                table.add_row(iface.name if first else "", addr)
+                first = False
+        console.print(table)
+        console.print()
+
+    # Public IP — reuse the info display
+    if public_info:
+        header = _build_header(public_info)
+        console.print(Text("  Public ", style="bold cyan"), header)
+        console.print()
+
+        sections: list[Any] = []
+
+        left_sections: list[Any] = []
+        right_sections: list[Any] = []
+
+        net_table = _build_network_section(public_info)
+        if net_table:
+            left_sections.append(net_table)
+
+        geo_table = _build_geo_section(public_info)
+        if geo_table:
+            right_sections.append(geo_table)
+
+        whois_table = _build_whois_section(public_info)
+        if whois_table:
+            left_sections.append(whois_table)
+
+        width = console.size.width
+        if width >= 90 and left_sections and right_sections:
+            grid = Table.grid(padding=(0, 4), expand=True)
+            grid.add_column(ratio=1)
+            grid.add_column(ratio=1)
+            grid.add_row(Group(*left_sections), Group(*right_sections))
+            sections.append(grid)
+        else:
+            sections.extend(left_sections)
+            sections.extend(right_sections)
+
+        rep_table = _build_reputation_section(public_info)
+        if rep_table:
+            sections.append(rep_table)
+
+        err_table = _build_errors_section(public_info)
+        if err_table:
+            sections.append(err_table)
+
+        for section in sections:
+            console.print(section)
+    elif myip.public_ip:
+        console.print(f"  [bold]Public IP:[/] {myip.public_ip}")
+    else:
+        console.print("  [yellow]Could not determine public IP[/]")
+
+    console.print()
 
 
 # --- Section builders ---

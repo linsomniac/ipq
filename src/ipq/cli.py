@@ -9,7 +9,15 @@ from rich.console import Console
 from typer.core import TyperGroup
 
 from ipq import __version__
-from ipq.display import print_calc, print_dns, print_info, print_json, print_trace, print_whois
+from ipq.display import (
+    print_calc,
+    print_dns,
+    print_info,
+    print_json,
+    print_myip,
+    print_trace,
+    print_whois,
+)
 from ipq.lookups import run_info_lookups
 from ipq.lookups.dns import lookup_dns_records, lookup_ptr
 from ipq.lookups.subnet import calculate_subnet
@@ -206,6 +214,63 @@ def trace_cmd(
         print_json(result)
     else:
         print_trace(result)
+
+
+@app.command()
+def myip(
+    json_output: Annotated[bool, typer.Option("--json", "-j", help="Output as JSON")] = False,
+    timeout: Annotated[
+        float, typer.Option("--timeout", "-T", help="Lookup timeout in seconds")
+    ] = 10.0,
+) -> None:
+    """Show public and local IP addresses for this system."""
+    from ipq.lookups.myip import (
+        discover_local_interfaces,
+        discover_public_ip,
+        get_hostname,
+        MyIPResult,
+    )
+
+    async def _run() -> tuple[MyIPResult, QueryResult | None]:
+        import httpx
+
+        myip_result = MyIPResult(
+            local_interfaces=discover_local_interfaces(),
+            hostname=get_hostname(),
+        )
+
+        async with httpx.AsyncClient(timeout=httpx.Timeout(timeout)) as client:
+            try:
+                ip, source = await discover_public_ip(client)
+                myip_result.public_ip = ip
+                myip_result.public_source = source
+            except Exception as e:
+                myip_result.public_ip = None
+                if not json_output:
+                    console.print(f"[yellow]Warning:[/] {e}")
+                return (myip_result, None)
+
+        # Run full info lookup on the public IP
+        public_info = await run_info_lookups(
+            target=myip_result.public_ip,
+            target_type="ipv4",
+            ip=myip_result.public_ip,
+            timeout=timeout,
+        )
+        return (myip_result, public_info)
+
+    myip_result, public_info = asyncio.run(_run())
+
+    if json_output:
+        import json
+        from dataclasses import asdict
+
+        out = asdict(myip_result)
+        if public_info:
+            out["public_info"] = public_info.to_dict()
+        console.print_json(json.dumps(out, indent=2, default=str))
+    else:
+        print_myip(myip_result, public_info)
 
 
 def _run_info(
