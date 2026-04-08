@@ -4,7 +4,6 @@ import json
 from typing import Any
 
 from rich.console import Console, Group
-from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
@@ -82,15 +81,15 @@ def print_info(result: QueryResult) -> None:
     if err_table:
         sections.append(err_table)
 
-    body = Group(*sections) if sections else Text("No data available", style="dim")
-    panel = Panel(
-        body,
-        title=header,
-        title_align="left",
-        border_style="blue",
-        padding=(1, 2),
-    )
-    console.print(panel)
+    console.print()
+    console.print(Text(" "), header)
+    console.print()
+    if sections:
+        for section in sections:
+            console.print(section)
+    else:
+        console.print(Text("  No data available", style="dim"))
+    console.print()
 
 
 def print_dns(result: QueryResult) -> None:
@@ -114,9 +113,9 @@ def print_dns(result: QueryResult) -> None:
     if dns.soa:
         table.add_row("SOA", dns.soa)
 
-    console.print(
-        Panel(table, title=f"[bold]{result.target}[/] DNS", title_align="left", border_style="blue")
-    )
+    console.print()
+    console.print(f"  [bold]{result.target}[/] DNS")
+    console.print(table)
     _print_errors(result)
 
 
@@ -141,14 +140,9 @@ def print_whois(result: QueryResult) -> None:
     _add_row(table, "Updated", w.updated)
     _add_row(table, "Description", w.description)
 
-    console.print(
-        Panel(
-            table,
-            title=f"[bold]{result.target}[/] WHOIS",
-            title_align="left",
-            border_style="blue",
-        )
-    )
+    console.print()
+    console.print(f"  [bold]{result.target}[/] WHOIS")
+    console.print(table)
     _print_errors(result)
 
 
@@ -170,23 +164,18 @@ def print_calc(subnet: SubnetResult) -> None:
     table.add_row("IP Version", f"IPv{subnet.ip_version}")
 
     cidr = f"{subnet.network}/{subnet.prefix_len}"
-    console.print(
-        Panel(table, title=f"[bold]{cidr}[/] Subnet", title_align="left", border_style="blue")
-    )
+    console.print()
+    console.print(f"  [bold]{cidr}[/] Subnet")
+    console.print(table)
 
 
 def print_trace(result: QueryResult) -> None:
     """Print traceroute-only output."""
     trace_table = _build_trace_section(result)
     if trace_table:
-        console.print(
-            Panel(
-                trace_table,
-                title=f"[bold]{result.target}[/] Traceroute",
-                title_align="left",
-                border_style="blue",
-            )
-        )
+        console.print()
+        console.print(f"  [bold]{result.target}[/] Traceroute")
+        console.print(trace_table)
     else:
         console.print("[yellow]No traceroute data available[/]")
     _print_errors(result)
