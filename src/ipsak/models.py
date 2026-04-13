@@ -1,4 +1,4 @@
-"""Data models for ipq query results."""
+"""Data models for ipsak query results."""
 
 from dataclasses import asdict, dataclass, field
 from typing import Any
@@ -120,7 +120,7 @@ class TraceHop:
 
 @dataclass
 class QueryResult:
-    """Complete result for an ipq query."""
+    """Complete result for an ipsak query."""
 
     target: str
     target_type: str  # ipv4, ipv6, cidr4, cidr6, domain

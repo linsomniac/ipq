@@ -5,7 +5,7 @@ import asyncio
 import dns.asyncresolver
 import dns.exception
 
-from ipq.models import ReputationResult
+from ipsak.models import ReputationResult
 
 # AIDEV-NOTE: Curated list of reliable, fast DNSBLs.
 # Spamhaus zen combines SBL+XBL+PBL. All support standard DNSBL protocol.

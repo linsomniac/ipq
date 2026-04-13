@@ -1,4 +1,4 @@
-"""Input type detection and normalization for ipq."""
+"""Input type detection and normalization for ipsak."""
 
 import ipaddress
 import re

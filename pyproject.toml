@@ -1,10 +1,47 @@
 [project]
-name = "ipq"
+name = "ipsak"
 version = "0.1.0"
-description = "Fast IP, CIDR, and domain information query tool for network operations"
+description = "The IP Swiss Army Knife — fast IP, CIDR, and domain information queries for network operations"
 readme = "README.md"
 license = "CC0-1.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
+authors = [
+    { name = "Sean Reifschneider" },
+]
+keywords = [
+    "ip",
+    "cidr",
+    "whois",
+    "dns",
+    "asn",
+    "geolocation",
+    "rpki",
+    "dnsbl",
+    "traceroute",
+    "networking",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Telecommunications Industry",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Networking :: Monitoring",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities",
+]
 dependencies = [
     "dnspython>=2.6",
     "ipwhois>=1.3",
@@ -18,18 +55,26 @@ dependencies = [
 # system traceroute/tracepath when unprivileged.
 
 [project.urls]
-Homepage = "https://github.com/linsomniac/ipq"
-Repository = "https://github.com/linsomniac/ipq"
+Homepage = "https://github.com/linsomniac/ipsak"
+Repository = "https://github.com/linsomniac/ipsak"
+Issues = "https://github.com/linsomniac/ipsak/issues"
+Changelog = "https://github.com/linsomniac/ipsak/releases"
 
 [project.scripts]
-ipq = "ipq.cli:app"
+ipsak = "ipsak.cli:app"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ipq"]
+packages = ["src/ipsak"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.10",
+    "ruff>=0.6",
+]
 
 [tool.ruff]
 line-length = 100

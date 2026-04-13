@@ -1,4 +1,4 @@
-"""Lookup orchestration for ipq.
+"""Lookup orchestration for ipsak.
 
 Runs all applicable lookups concurrently and collects results.
 """
@@ -7,16 +7,16 @@ import asyncio
 
 import httpx
 
-from ipq.lookups.asn import lookup_asn_cymru
-from ipq.lookups.bogon import check_bogon
-from ipq.lookups.dns import lookup_dns_records, lookup_ptr
-from ipq.lookups.geo import lookup_geo
-from ipq.lookups.reputation import check_dnsbl
-from ipq.lookups.rpki import lookup_rpki
-from ipq.lookups.subnet import calculate_subnet
-from ipq.lookups.trace import run_traceroute
-from ipq.lookups.whois import lookup_whois
-from ipq.models import QueryResult
+from ipsak.lookups.asn import lookup_asn_cymru
+from ipsak.lookups.bogon import check_bogon
+from ipsak.lookups.dns import lookup_dns_records, lookup_ptr
+from ipsak.lookups.geo import lookup_geo
+from ipsak.lookups.reputation import check_dnsbl
+from ipsak.lookups.rpki import lookup_rpki
+from ipsak.lookups.subnet import calculate_subnet
+from ipsak.lookups.trace import run_traceroute
+from ipsak.lookups.whois import lookup_whois
+from ipsak.models import QueryResult
 
 
 # AIDEV-NOTE: Orchestration runs lookups in two phases:
@@ -105,13 +105,13 @@ def _assign_result(result: QueryResult, name: str, value: object) -> None:
     match name:
         case "ptr":
             if result.dns is None:
-                from ipq.models import DNSResults
+                from ipsak.models import DNSResults
 
                 result.dns = DNSResults()
             result.dns.ptr = value  # type: ignore[assignment]
         case "dns":
             if result.dns is None:
-                from ipq.models import DNSResults
+                from ipsak.models import DNSResults
 
                 result.dns = DNSResults()
             # Merge DNS records into existing dns result (which may have ptr)

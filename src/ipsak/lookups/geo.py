@@ -2,12 +2,12 @@
 
 import httpx
 
-from ipq.models import GeoResult
+from ipsak.models import GeoResult
 
 
 # AIDEV-NOTE: ip-api.com free tier: 45 req/min, HTTP only (HTTPS is paid).
 # Fine for interactive CLI use. Will get 429 if scripted heavily.
-_FIELDS = "status,message,country,countryCode,regionName,city," "lat,lon,timezone,isp,org,as,query"
+_FIELDS = "status,message,country,countryCode,regionName,city,lat,lon,timezone,isp,org,as,query"
 
 
 async def lookup_geo(ip: str, client: httpx.AsyncClient) -> GeoResult:

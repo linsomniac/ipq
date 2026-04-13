@@ -2,7 +2,7 @@
 
 import ipaddress
 
-from ipq.models import BogonResult
+from ipsak.models import BogonResult
 
 
 # AIDEV-NOTE: This covers all IANA special-purpose address registries.

@@ -1,19 +1,19 @@
-# ipq
+# ipsak
 
-Fast IP, CIDR, and domain information query tool for network operations.
+The IP Swiss Army Knife -- fast IP, CIDR, and domain information queries for network operations.
 
 One command gives you ASN, geolocation, WHOIS, DNS, RPKI validation, DNSBL reputation, subnet math, and traceroute -- all in parallel.
 
 ## Quickstart
 
 ```bash
-uvx --from git+https://github.com/linsomniac/ipq ipq 8.8.8.8
+uvx ipsak 8.8.8.8
 ```
 
 ## Demo
 
 ```
-$ ipq 8.8.8.8
+$ ipsak 8.8.8.8
 
   8.8.8.8 · dns.google · AS15169 GOOGLE - Google LLC, US · Ashburn, US · Public
 
@@ -34,7 +34,7 @@ $ ipq 8.8.8.8
 ```
 
 ```
-$ ipq dns google.com
+$ ipsak dns google.com
 
   google.com DNS
   A         142.251.35.142
@@ -50,7 +50,7 @@ $ ipq dns google.com
 ```
 
 ```
-$ ipq calc 10.0.0.0/24
+$ ipsak calc 10.0.0.0/24
 
   10.0.0.0/24 Subnet
   Network         10.0.0.0
@@ -69,39 +69,47 @@ $ ipq calc 10.0.0.0/24
 
 Requires Python 3.11+.
 
-### Run directly from GitHub (no install)
+### Run without installing
 
 ```bash
-uvx --from git+https://github.com/linsomniac/ipq ipq 8.8.8.8
+uvx ipsak 8.8.8.8
 ```
 
-### Install from GitHub
+### Install with uv
 
 ```bash
-uv tool install git+https://github.com/linsomniac/ipq
-ipq 8.8.8.8
+uv tool install ipsak
+ipsak 8.8.8.8
+```
+
+### Install with pipx or pip
+
+```bash
+pipx install ipsak
+# or
+pip install ipsak
 ```
 
 ### Install from source
 
 ```bash
-git clone https://github.com/linsomniac/ipq.git
-cd ipq
+git clone https://github.com/linsomniac/ipsak.git
+cd ipsak
 uv tool install .
 ```
 
 ## Usage
 
 ```
-ipq <target>              # Full info (ASN, geo, WHOIS, DNS, RPKI, reputation)
-ipq dns <domain|ip>       # DNS records or reverse DNS
-ipq whois <target>        # WHOIS/RDAP lookup
-ipq calc <cidr>           # Subnet calculator
-ipq trace <target>        # Traceroute (requires: uv tool install 'ipq[trace]')
-ipq myip                  # Show public and local IP addresses
+ipsak <target>              # Full info (ASN, geo, WHOIS, DNS, RPKI, reputation)
+ipsak dns <domain|ip>       # DNS records or reverse DNS
+ipsak whois <target>        # WHOIS/RDAP lookup
+ipsak calc <cidr>           # Subnet calculator
+ipsak trace <target>        # Traceroute (fast parallel ICMP; needs root for raw sockets)
+ipsak myip                  # Show public and local IP addresses
 ```
 
-The target can be an IPv4/IPv6 address, a CIDR block, or a domain name. When no subcommand is given, `ipq` defaults to `info`.
+The target can be an IPv4/IPv6 address, a CIDR block, or a domain name. When no subcommand is given, `ipsak` defaults to `info`.
 
 ### Options
 
@@ -114,11 +122,15 @@ The target can be an IPv4/IPv6 address, a CIDR block, or a domain name. When no 
 
 ### Traceroute
 
-Traceroute requires the optional `icmplib` dependency and root/sudo privileges:
+`ipsak trace` uses a fast parallel raw-ICMP engine when it has the privileges to
+open raw sockets (root, `sudo`, or `CAP_NET_RAW`). If it doesn't, it falls back
+to the system `traceroute` or `tracepath` binary.
 
 ```bash
-uv tool install 'git+https://github.com/linsomniac/ipq[trace]'
-sudo ipq trace 8.8.8.8
+sudo ipsak trace 8.8.8.8
+# or grant the capability once:
+sudo setcap cap_net_raw+ep "$(readlink -f "$(which ipsak)")"
+ipsak trace 8.8.8.8
 ```
 
 ## What it queries

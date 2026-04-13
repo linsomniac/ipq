@@ -8,8 +8,8 @@
 #     "rich>=13.0",
 # ]
 # ///
-"""Allow running as `python -m ipq` or `uv run src/ipq/__main__.py`."""
+"""Allow running as `python -m ipsak` or `uv run src/ipsak/__main__.py`."""
 
-from ipq.cli import app
+from ipsak.cli import app
 
 app()

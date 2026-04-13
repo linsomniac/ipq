@@ -3,7 +3,7 @@
 import asyncio
 from typing import Any
 
-from ipq.models import WhoisResult
+from ipsak.models import WhoisResult
 
 
 async def lookup_whois(ip: str, *, timeout: float = 15.0) -> WhoisResult:

@@ -1,4 +1,4 @@
-"""CLI entry point for ipq."""
+"""CLI entry point for ipsak."""
 
 import asyncio
 from typing import Annotated
@@ -8,8 +8,8 @@ import typer
 from rich.console import Console
 from typer.core import TyperGroup
 
-from ipq import __version__
-from ipq.display import (
+from ipsak import __version__
+from ipsak.display import (
     print_calc,
     print_dns,
     print_info,
@@ -18,19 +18,19 @@ from ipq.display import (
     print_trace,
     print_whois,
 )
-from ipq.lookups import run_info_lookups
-from ipq.lookups.dns import lookup_dns_records, lookup_ptr
-from ipq.lookups.subnet import calculate_subnet
-from ipq.lookups.trace import run_traceroute
-from ipq.lookups.whois import lookup_whois
-from ipq.models import DNSResults, QueryResult
-from ipq.resolve import detect_target
+from ipsak.lookups import run_info_lookups
+from ipsak.lookups.dns import lookup_dns_records, lookup_ptr
+from ipsak.lookups.subnet import calculate_subnet
+from ipsak.lookups.trace import run_traceroute
+from ipsak.lookups.whois import lookup_whois
+from ipsak.models import DNSResults, QueryResult
+from ipsak.resolve import detect_target
 
 console = Console(stderr=True)
 
 
 # AIDEV-NOTE: Custom Click group that routes unknown first arguments to the "info"
-# subcommand, enabling `ipq 8.8.8.8` as shorthand for `ipq info 8.8.8.8`.
+# subcommand, enabling `ipsak 8.8.8.8` as shorthand for `ipsak info 8.8.8.8`.
 # Known subcommands (dns, whois, calc, trace) are routed normally.
 class DefaultInfoGroup(TyperGroup):
     def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
@@ -41,8 +41,8 @@ class DefaultInfoGroup(TyperGroup):
 
 
 app = typer.Typer(
-    name="ipq",
-    help="Fast IP, CIDR, and domain information query tool for network operations.",
+    name="ipsak",
+    help="The IP Swiss Army Knife — fast IP, CIDR, and domain information queries for network operations.",
     cls=DefaultInfoGroup,
     add_completion=False,
     invoke_without_command=True,
@@ -54,9 +54,9 @@ def main(
     ctx: typer.Context,
     version: Annotated[bool, typer.Option("--version", "-V", help="Show version")] = False,
 ) -> None:
-    """Fast IP, CIDR, and domain information query tool."""
+    """The IP Swiss Army Knife — fast IP, CIDR, and domain information queries."""
     if version:
-        typer.echo(f"ipq {__version__}")
+        typer.echo(f"ipsak {__version__}")
         raise typer.Exit()
     if ctx.invoked_subcommand is None:
         typer.echo(ctx.get_help())
@@ -235,7 +235,7 @@ def myip(
     ] = 10.0,
 ) -> None:
     """Show public and local IP addresses for this system."""
-    from ipq.lookups.myip import (
+    from ipsak.lookups.myip import (
         discover_local_interfaces,
         discover_public_ip,
         get_hostname,

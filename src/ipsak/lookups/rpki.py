@@ -2,7 +2,7 @@
 
 import httpx
 
-from ipq.models import RPKIResult
+from ipsak.models import RPKIResult
 
 # AIDEV-NOTE: Uses RIPE's RIPEstat API for RPKI validation. No auth required.
 # Cloudflare's API returns 404 for the path-based prefix format.

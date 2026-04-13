@@ -1,4 +1,4 @@
-"""Rich terminal display for ipq query results."""
+"""Rich terminal display for ipsak query results."""
 
 import json
 from typing import Any
@@ -7,8 +7,8 @@ from rich.console import Console, Group
 from rich.table import Table
 from rich.text import Text
 
-from ipq.lookups.myip import MyIPResult
-from ipq.models import QueryResult, SubnetResult
+from ipsak.lookups.myip import MyIPResult
+from ipsak.models import QueryResult, SubnetResult
 
 console = Console()
 

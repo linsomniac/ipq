@@ -5,7 +5,7 @@ import ipaddress
 import dns.asyncresolver
 import dns.exception
 
-from ipq.models import ASNResult
+from ipsak.models import ASNResult
 
 
 async def lookup_asn_cymru(ip: str, *, timeout: float = 10.0) -> ASNResult:

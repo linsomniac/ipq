@@ -2,7 +2,7 @@
 
 import ipaddress
 
-from ipq.models import SubnetResult
+from ipsak.models import SubnetResult
 
 
 def calculate_subnet(cidr: str) -> SubnetResult:

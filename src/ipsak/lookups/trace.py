@@ -15,7 +15,7 @@ import dns.asyncresolver
 import dns.exception
 import dns.reversename
 
-from ipq.models import TraceHop
+from ipsak.models import TraceHop
 
 
 async def run_traceroute(
@@ -60,7 +60,7 @@ async def _traceroute_raw(
     target: str, *, timeout: float = 10.0, count: int = 5, max_hops: int = 30
 ) -> list[TraceHop]:
     """Parallel traceroute via raw ICMP sockets."""
-    from ipq.lookups.trace_engine import parallel_trace
+    from ipsak.lookups.trace_engine import parallel_trace
 
     loop = asyncio.get_running_loop()
     hop_data = await loop.run_in_executor(
